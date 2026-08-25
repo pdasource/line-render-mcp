@@ -7,7 +7,7 @@ import { z } from "zod";
 
 const required = (name: string): string => {
   const value = process.env[name];
-  if (!value) throw new Error(\`${name} must be set\`);
+  if (!value) throw new Error(`${name} must be set`);
   return value;
 };
 
@@ -20,14 +20,14 @@ const knownGroups = new Map<string, { name?: string; lastSeenAt: string }>();
 
 const isAuthorized = (request: Request): boolean => {
   const auth = request.header("authorization");
-  const expected = \`Bearer ${mcpApiKey}\`;
+  const expected = `Bearer ${mcpApiKey}`;
   if (!auth || auth.length !== expected.length) return false;
   return crypto.timingSafeEqual(Buffer.from(auth), Buffer.from(expected));
 };
 
 const sendText = async (to: string, text: string) => {
   await lineClient.pushMessage({ to, messages: [{ type: "text", text }] });
-  return { content: [{ type: "text" as const, text: \`ส่งข้อความ LINE ไปยัง ${to} เรียบร้อยแล้ว\` }] };
+  return { content: [{ type: "text" as const, text: `ส่งข้อความ LINE ไปยัง ${to} เรียบร้อยแล้ว` }] };
 };
 
 const server = new McpServer({ name: "LINE Messaging", version: "1.0.0" });
@@ -64,7 +64,7 @@ server.tool(
       to,
       messages: [{ type: "flex", altText, contents: contents as never }],
     });
-    return { content: [{ type: "text" as const, text: \`ส่ง Flex Message ไปยัง ${to} เรียบร้อยแล้ว\` }] };
+    return { content: [{ type: "text" as const, text: `ส่ง Flex Message ไปยัง ${to} เรียบร้อยแล้ว` }] };
   },
 );
 
@@ -131,4 +131,4 @@ app.all("/mcp", async (request, response) => {
 });
 
 const port = Number(process.env.PORT ?? 3000);
-app.listen(port, "0.0.0.0", () => console.info(\`LINE MCP listening on :${port}\`));
+app.listen(port, "0.0.0.0", () => console.info(`LINE MCP listening on :${port}`));
